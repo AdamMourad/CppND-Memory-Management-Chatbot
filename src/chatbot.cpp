@@ -31,15 +31,33 @@ ChatBot::ChatBot(std::string filename)
 }
 
 
+
+
+ChatBot::~ChatBot()
+{
+    std::cout << "ChatBot Destructor" << std::endl;
+
+    // deallocate heap memory
+    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+    {
+        delete _image;
+        _image = NULL;
+
+    }
+}
+
+//// STUDENT CODE
+////
 /*Copy constructor*/
 ChatBot::ChatBot(const ChatBot &source)
 {
     std::cout << "Copy ChatBot Constructor" << std::endl;
     //allocating the memory for the same size of the source _image 
-    _image = new wxBitmap [sizeof(source._image)];
-    *_image = *source._image;
-    *_chatLogic = *source._chatLogic;
-    *_rootNode = *source._rootNode;
+    _image = new wxBitmap (*source._image);
+   // _image = source._image;
+    _chatLogic = source._chatLogic;
+    _rootNode = source._rootNode;
+    _currentNode =source._currentNode;
 }
 
 /*Copy Operator*/
@@ -48,12 +66,14 @@ ChatBot::ChatBot(const ChatBot &source)
     std::cout << "Copy ChatBot Operator" << std::endl;
       if(this == &source)
         return *this;
-        /*is it right to delete the source_image before copying it ?*/
-    delete source._image;
-    _image = new wxBitmap [sizeof(source._image)];
-    _image = source._image;
+        /*is it right to delete the _image before copying it ?*/
+    delete _image;
+    _image = new wxBitmap (*source._image);
+   // _image = source._image;
     _chatLogic = source._chatLogic;
     _rootNode = source._rootNode;
+    _currentNode =source._currentNode;
+
     return *this;
 
   }
@@ -67,8 +87,10 @@ ChatBot::ChatBot(const ChatBot &source)
     _image = source._image;
     _chatLogic = source._chatLogic;
     _rootNode = source._rootNode;
-    if(_image != NULL)
-        delete _image;
+    _currentNode =source._currentNode;
+
+    _chatLogic->SetChatbotHandle(this);
+
     source._image = NULL;
     source._rootNode = nullptr;
     source._chatLogic = nullptr;
@@ -78,39 +100,28 @@ ChatBot::ChatBot(const ChatBot &source)
 } 
 
 /*Move operator*/
-  ChatBot &ChatBot::operator=( ChatBot &&source)
+  ChatBot& ChatBot::operator=( ChatBot &&source)
   {
     std::cout << "Move ChatBot Operator" << std::endl;
       if(this == &source)
         return *this;
-
+    
+     delete _image;
     _image = source._image;
     _chatLogic = source._chatLogic;
     _rootNode = source._rootNode;
+    _currentNode =source._currentNode;
+
+    _chatLogic->SetChatbotHandle(this);
+    
     source._image = NULL;
     source._rootNode = nullptr;
     source._chatLogic = nullptr;
     source._currentNode = nullptr;
 
     return *this;
-
+    
   }
-
-
-ChatBot::~ChatBot()
-{
-    std::cout << "ChatBot Destructor" << std::endl;
-
-    // deallocate heap memory
-    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
-    {
-        delete _image;
-
-    }
-}
-
-//// STUDENT CODE
-////
 
 ////
 //// EOF STUDENT CODE

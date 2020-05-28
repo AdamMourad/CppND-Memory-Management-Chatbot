@@ -137,12 +137,13 @@ ChatBotPanelDialog::ChatBotPanelDialog(wxWindow *parent, wxWindowID id)
 
 ChatBotPanelDialog::~ChatBotPanelDialog()
 {
+    //converted to a smartpointer 
     //// STUDENT CODE
-    ////
-    if(_chatLogic!=nullptr)
-    {
-  //    delete _chatLogic;
-    }
+//     ////
+//     if(_chatLogic!=nullptr)
+//     {
+//   //    delete _chatLogic;
+//     }
     ///
     //// EOF STUDENT CODE
 }
